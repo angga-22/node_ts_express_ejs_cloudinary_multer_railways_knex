@@ -6,7 +6,10 @@ const addCar = async (car: Car) => {
 };
 
 const searchCar = async (name: string) => {
-  return knexBuilder("cars").select("*").where({ name });
+  return knexBuilder
+    .select("*")
+    .from("cars")
+    .whereRaw("LOWER(name) = LOWER(?)", name);
 };
 
 const getCars = async () => {

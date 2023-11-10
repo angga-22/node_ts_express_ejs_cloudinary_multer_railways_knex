@@ -5,6 +5,10 @@ const carName = document.getElementById("carName");
 const rentPrice = document.getElementById("rentPrice");
 const closeModalBtn = document.getElementsByClassName("btn-close")[0];
 const onConfirmDeleteCar = document.getElementById("onConfirmDeleteCar");
+const searchCarsInput = document.getElementById("searchCarsInput");
+const searchCarsByNameFormSubmit = document.getElementById(
+  "searchCarsByNameFormSubmit"
+);
 
 const addNewCar = async (e) => {
   e.preventDefault();
@@ -22,7 +26,7 @@ const addNewCar = async (e) => {
     });
     await response.json();
     closeModalBtn.click();
-    loadCarsData();
+    loadCarsData(``);
   } catch (error) {
     throw new Error(error);
   }
@@ -49,7 +53,7 @@ function handleDeleteCar(id) {
       });
 
       if (response.ok) {
-        loadCarsData();
+        loadCarsData(``);
       } else {
         console.error("Error deleting car:", response.statusText);
       }
@@ -60,14 +64,13 @@ function handleDeleteCar(id) {
     }
   });
 
-  // Show the confirmation modal
   confirmDeleteModal.show();
 }
 
-const loadCarsData = async () => {
+const loadCarsData = async (name = ``) => {
   try {
     carEl.innerHTML = "";
-    const response = await fetch("/cars/list");
+    const response = await fetch(`/cars/list?name=${name}`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -97,7 +100,12 @@ const loadCarsData = async () => {
   }
 };
 
-formSubmit.addEventListener("submit", addNewCar);
-imageFile.addEventListener("change", handleChangeImageFile);
+searchCarsByNameFormSubmit.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  loadCarsData(encodeURIComponent(searchCarsInput.value));
+});
 
-loadCarsData();
+imageFile.addEventListener("change", handleChangeImageFile);
+formSubmit.addEventListener("submit", addNewCar);
+
+loadCarsData(``);

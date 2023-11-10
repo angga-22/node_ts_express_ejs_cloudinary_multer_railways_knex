@@ -1,8 +1,7 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import path from "path";
-import { Dashboard } from "./routes/";
-import Cars from "./routes/Cars";
+import { Dashboard, Cars } from "./routes/";
 import knexConfig from "./config/db";
 const PUBLIC_DIR = path.join(__dirname, "../public");
 const PORT = process.env.PORT;
